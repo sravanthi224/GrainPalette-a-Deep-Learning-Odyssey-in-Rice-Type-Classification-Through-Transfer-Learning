@@ -109,5 +109,7 @@ def contact():
 
 # App run
 if __name__ == '__main__':
+    import os
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000)
+
