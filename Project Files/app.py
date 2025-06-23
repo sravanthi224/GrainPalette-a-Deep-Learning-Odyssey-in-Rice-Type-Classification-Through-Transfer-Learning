@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
+from flask_cors import CORS
 from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
@@ -7,8 +8,11 @@ import json
 from werkzeug.utils import secure_filename
 
 # Flask app initialization
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')  # Use root folder for HTML files
 app.secret_key = "your_secret_key"  # Required for flashing messages
+
+# Enable CORS for all domains
+CORS(app)
 
 # Upload folder config
 UPLOAD_FOLDER = 'static/uploads'
@@ -80,7 +84,6 @@ def predict():
         label, confidence = model_predict(filepath)
         confidence_percent = round(confidence * 100, 2)
         image_url = f"/static/uploads/{filename}"
-
         return redirect(url_for('results', type=label, confidence=confidence_percent, image_url=image_url))
     except Exception as e:
         print("Prediction Error:", e)
