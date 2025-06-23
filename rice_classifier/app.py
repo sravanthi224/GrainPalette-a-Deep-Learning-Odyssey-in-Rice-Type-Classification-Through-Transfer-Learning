@@ -21,8 +21,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure upload folder exists
 
 # Model configuration
 IMAGE_SIZE = 224
-MODEL_PATH = 'model/rice_model.keras'
-LABEL_MAP_PATH = 'model/label_map.json'
+
+# Properly resolve absolute paths for model and label map
+BASE_DIR = os.path.dirname(__file__)
+MODEL_PATH = os.path.join(BASE_DIR, "model", "rice_model.keras")
+LABEL_MAP_PATH = os.path.join(BASE_DIR, "model", "label_map.json")
 
 # Load trained model
 model = load_model(MODEL_PATH)
@@ -106,4 +109,3 @@ def contact():
 # Local run (development only)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-
