@@ -1,5 +1,7 @@
-Flask
+flask
 tensorflow
 numpy
 opencv-python
-Pillow
+gunicorn
+werkzeug
+flask-cors
