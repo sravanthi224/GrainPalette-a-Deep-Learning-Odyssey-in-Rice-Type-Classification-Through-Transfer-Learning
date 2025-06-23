@@ -9,7 +9,7 @@ COPY . .
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r rice_classifier/requirements.txt
 
 # Expose the port your app runs on (Render uses 10000+ range internally)
 EXPOSE 10000
