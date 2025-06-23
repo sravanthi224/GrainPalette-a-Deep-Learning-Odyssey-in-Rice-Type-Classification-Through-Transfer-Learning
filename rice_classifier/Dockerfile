@@ -1,18 +1,18 @@
-# Use a base image
+# Use official Python image
 FROM python:3.10-slim
 
-# Set working directory in container
+# Set working directory inside container
 WORKDIR /app
 
-# Copy files from host into container
+# Copy all files from the rice_classifier directory
 COPY . .
 
-# Upgrade pip and install dependencies
+# Install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port your app runs on
-EXPOSE 10000
+# Expose the port (Render uses 10000+)
+EXPOSE 8000
 
 # Start the app using gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
