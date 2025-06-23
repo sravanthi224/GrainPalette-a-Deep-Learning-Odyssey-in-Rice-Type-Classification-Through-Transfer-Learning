@@ -1,18 +1,18 @@
 # Use official Python image
 FROM python:3.10-slim
 
-# Set working directory inside container
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy all files from the rice_classifier directory
+# Copy all files from rice_classifier into the container
 COPY . .
 
-# Install dependencies
+# Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port (Render uses 10000+)
-EXPOSE 8000
+# Expose the port your app runs on (Render uses 10000+ range internally)
+EXPOSE 10000
 
-# Start the app using gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
+# Start the Flask app using Gunicorn
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
