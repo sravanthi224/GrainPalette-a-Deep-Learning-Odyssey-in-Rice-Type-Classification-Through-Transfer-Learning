@@ -1,31 +1,18 @@
-# Use an official Python base image
+# Use a base image
 FROM python:3.10-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set working directory inside the container
+# Set working directory in container
 WORKDIR /app
 
-# Copy all files from your repo to container
+# Copy files from host into container
 COPY . .
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
+# Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose port
-EXPOSE 8080
+# Expose the port your app runs on
+EXPOSE 10000
 
-# Start the app using Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+# Start the app using gunicorn
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
