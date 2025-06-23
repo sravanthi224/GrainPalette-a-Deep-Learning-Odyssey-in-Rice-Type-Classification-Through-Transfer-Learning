@@ -3,3 +3,4 @@ gunicorn==21.2.0
 numpy
 opencv-python-headless
 tensorflow-cpu==2.11.0  # Pick version that works
+flask-cors
