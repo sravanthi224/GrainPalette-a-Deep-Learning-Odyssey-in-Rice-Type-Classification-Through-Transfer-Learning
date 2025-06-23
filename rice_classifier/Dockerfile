@@ -15,4 +15,4 @@ RUN pip install -r rice_classifier/requirements.txt
 EXPOSE 10000
 
 # Start the Flask app using Gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
+CMD ["gunicorn", "rice_classifier.app:app", "--bind", "0.0.0.0:10000"]
