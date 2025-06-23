@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rice Type Classification - Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url("/static/assets/agric.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+    .main-content {
+      flex: 1;
+    }
+    header {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 1rem 2rem;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideInDown 1s ease-out;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #80ff80;
+    }
+    .upload-section {
+      background-color: rgba(255, 255, 255, 0.9);
+      margin: 5% auto;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .upload-section h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .file-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="file"] {
+      padding: 10px;
+      font-size: 16px;
+      max-width: 100%;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .remove-button {
+      background-color: #f44336;
+    }
+    .remove-button:hover {
+      background-color: #d32f2f;
+    }
+    .result-box {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #004d00;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.3rem;
+      }
+      .upload-section {
+        width: 90%;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+    <header>
+      <h1>RICE TYPE CLASSIFICATION</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="details.html">Details</a>
+        <a href="results.html">Results</a>
+        <a href="#">Contact</a>
+      </nav>
+    </header>
+
+    <section class="upload-section">
+      <h2>Upload Your Rice Grain Image</h2>
+      <form id="uploadForm">
+        <div class="file-input-wrapper">
+          <input type="file" name="image" id="imageInput" accept="image/*" required><br>
+          <button type="submit" id="submitBtn">Upload</button>
+          <button type="button" id="removeBtn" class="remove-button" style="display: none;">Remove File</button>
+        </div>
+      </form>
+      <div class="result-box" id="resultBox"></div>
+    </section>
+  </div>
+
+  <footer>
+    &copy; 2025 Rice Classifier. All rights reserved.
+  </footer>
+
+<script>
+  const fileInput = document.getElementById('imageInput');
+  const removeBtn = document.getElementById('removeBtn');
+  const resultBox = document.getElementById('resultBox');
+  const uploadForm = document.getElementById('uploadForm');
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      removeBtn.style.display = 'inline-block';
+      resultBox.innerText = '';
+    } else {
+      removeBtn.style.display = 'none';
+    }
+  });
+
+  removeBtn.addEventListener('click', () => {
+    fileInput.value = '';
+    removeBtn.style.display = 'none';
+    resultBox.innerText = '';
+  });
+
+  uploadForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (fileInput.files.length === 0) {
+      resultBox.innerText = "Please select an image first.";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+
+    resultBox.innerText = "Classifying...";
+
+    try {
+      const response = await fetch('/predict', {
+        method: 'POST',
+        body: formData
+      });
+
+      // If the server redirects, we manually follow it
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        resultBox.innerText = "Unexpected response. Prediction failed.";
+        console.warn("Response was not redirected:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      resultBox.innerText = "⚠️ Error occurred during prediction.";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rice Type Detection</title>
+  <meta name="description" content="AI-powered rice grain classifier using image recognition and deep learning. Identify rice types accurately with our intelligent model." />
+  <meta name="keywords" content="rice classification, deep learning, rice type detection, CNN, MobileNetV2, Kaggle rice dataset, agriculture AI" />
+  <meta name="author" content="Jyothi Sravanthi Somu" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url("/static/assets/agric.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: black;
+      padding: 20px 50px;
+      color: white;
+    }
+
+    nav .logo {
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: limegreen;
+    }
+
+    header {
+      height: 60vh;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.5);             
+      border-radius: 10px;
+      margin: 100px;
+      padding: 40px;
+    }
+
+    header h1 {
+      font-size: 3.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 10px black;
+      color: black;
+    }
+
+    header p {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: black;
+    }
+
+    header button {
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: green;
+      color: white;
+      border: 2px solid limegreen;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    header button:hover {
+      background-color: limegreen;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    main section {
+      padding: 60px 80px;
+    }
+
+    .about {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .about img {
+      width: 45%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .about img:hover {
+      transform: scale(1.02);
+    }
+
+    .about-content {
+      flex: 1;
+    }
+
+    .about-content h2 {
+      color: black;
+      margin-bottom: 15px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .feature {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1 1 220px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .feature:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .contact {
+      background-color: #fff;
+    }
+
+    .contact h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: green;
+    }
+
+    .contact-boxes {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .contact-box {
+      background: #f4f4f4;
+      padding: 20px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .contact-form button {
+      width: 150px;
+      align-self: center;
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .contact-form button:hover {
+      background-color: green;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: black;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2em;
+      }
+
+      .about {
+        flex-direction: column;
+      }
+
+      .about img {
+        width: 100%;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      main section {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav aria-label="Main Navigation">
+    <div class="logo">RICE TYPE DETECTION</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="{{ url_for('details') }}">Predict</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="home">
+    <h1 data-aos="fade-up">Welcome to Rice Type Detection</h1>
+    <p data-aos="fade-up" data-aos-delay="200">This model can detect rice type based on rice images.</p>
+    <a href="{{ url_for('details') }}">
+      <button data-aos="zoom-in" data-aos-delay="300">Predict</button>
+    </a>
+  </header>
+
+  <!-- About Section -->
+  <main>
+    <section id="about">
+      <div class="about">
+        <img src="/static/assets/rice.jpg" alt="Close-up of Rice Grains" data-aos="fade-right" />
+        <div class="about-content" data-aos="fade-left">
+          <h2>About the Rice Type Classification Model</h2>
+          <p>This model is built using a Convolutional Neural Network (CNN) with MobileNetV2 and Transfer Learning. It is trained on a labeled dataset from Kaggle and can identify five different rice types from grain images.</p>
+          <div class="features">
+            <div class="feature">Accuracy: 97%</div>
+            <div class="feature">5 Types of Rice</div>
+            <div class="feature">Dataset from Kaggle</div>
+            <div class="feature">MobileNetV2 + Transfer Learning</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <h2 data-aos="fade-up">Contact Us</h2>
+      <div class="contact-boxes">
+        <div class="contact-box" data-aos="fade-up">
+          <strong>📍 Our Address:</strong><br>
+          Andhra Pradesh, India
+        </div>
+        <div class="contact-box" data-aos="fade-up" data-aos-delay="100">
+          <strong>✉️ Email Us:</strong><br>
+          user@gmail.com
+        </div>
+        <div class="contact-box" data-aos="fade-up" data-aos-delay="200">
+          <strong>📞 Call Us:</strong><br>
+          +91 987
+        </div>
+      </div>
+
+      <form class="contact-form" data-aos="zoom-in-up" method="POST" action="/contact">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <input type="text" name="subject" placeholder="Subject" />
+        <textarea name="message" rows="5" placeholder="Your Message"></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Rice Type Detection | All Rights Reserved
+  </footer>
+
+  <!-- Flash Message from Flask -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <script>
+        alert("{{ messages[0][1] }}");
+      </script>
+    {% endif %}
+  {% endwith %}
+
+  <!-- AOS Animation Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1200 });
+  </script>
+</body>
+</html>
