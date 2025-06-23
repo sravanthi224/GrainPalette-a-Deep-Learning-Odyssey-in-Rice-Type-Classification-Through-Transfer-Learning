@@ -2,6 +2,9 @@ services:
   - type: web
     name: rice-classifier
     env: python
-    buildCommand: ""
+    rootDir: Project Files
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
-    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
