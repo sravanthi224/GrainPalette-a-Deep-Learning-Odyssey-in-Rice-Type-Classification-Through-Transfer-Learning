@@ -1,10 +1,14 @@
 services:
   - type: web
-    name: rice-classifier
+    name: rice-classifier-app  
     env: python
-    rootDir: Project Files
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn rice_classifier.app:app
+    buildCommand: ./render-build.sh
+    startCommand: gunicorn rice_classifier.app:app --bind 0.0.0.0:$PORT
+    plan: free
+    branch: main  # or your current deployment branch
     envVars:
+      - key: PORT
+        value: 8000
       - key: PYTHON_VERSION
         value: 3.10
+
